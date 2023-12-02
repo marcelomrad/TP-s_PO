@@ -1,47 +1,68 @@
+function lerDados()
+    if length(ARGS) < 2
+        error("Número de argumentos inválido")
+    end
+    
+    filePath = ARGS[1]
+    file = open(filePath, "r")
 
-# Ler os dados de entrada
-function ler_dados(nome_arquivo)
-    arquivo = open(nome_arquivo, "r")
-    n = parse(Int, split(readline(arquivo), '\t')[2])
-    objetos = [parse(Float64, split(readline(arquivo), '\t')[3]) for i in 1:n]
-    close(arquivo)
-    return n, objetos
-end
-
-
-#Heurística de empacotamento
-function resolver_empacotamento(nome_arquivo)
-    n, pesos = ler_dados(nome_arquivo)
-    objetos = [(i, peso) for (i, peso) in enumerate(pesos)]
-    sort!(objetos, by=x->x[2], rev=true) # Ordena os objetos por peso em ordem decrescente
-
-    caixas = []
-    for (indice_objeto, peso_objeto) in objetos
-        colocou = false
-        for caixa in caixas
-            if sum(map(x -> x[2], caixa)) + peso_objeto <= 20.0 # Verifica se o objeto cabe na caixa
-                push!(caixa, (indice_objeto, peso_objeto))
-                colocou = true
-                break
-            end
+    number_objs = readline(file)
+    number_objs = match(r"n\s+(\d+)", number_objs)
+    number_objs = parse(Int, number_objs.captures[1])
+    obj = Tuple{Int, Float64}[]
+    
+    for i in 1:number_objs
+        line = readline(file)
+        match_result = match(r"o\s+(\d+)\s+([0-9.]+)", line)
+        
+        if match_result === nothing
+            error("Formato da linha $i incorreto")
         end
-        if !colocou
-            push!(caixas, [(indice_objeto, peso_objeto)]) # Cria uma nova caixa se o objeto não couber em nenhuma caixa existente
-        end
+        
+        id = parse(Int, match_result.captures[1])
+        peso = parse(Float64, match_result.captures[2])
+        push!(obj, (id, peso))
     end
 
-    # Imprimir a solução
-    println("TP2 MATRICULA: ", length(caixas))
-    for caixa in caixas
-        indices_objetos = [string(indice) for (indice, _) in caixa]
-        println(join(indices_objetos, '\t'))
+    close(file)
+    return obj
+end
+
+objetos = lerDados()
+limite_peso = 20
+
+objetos = sort(objetos, by = x -> x[2], rev = true)
+
+limite_peso = 20
+caixas = []
+
+for obj in objetos
+    caixa = nothing
+    
+    for c in caixas
+        if sum(map(x -> x[2], c)) + obj[2] <= limite_peso
+            caixa = c
+            break
+        end
+    end
+    
+    if caixa === nothing
+        caixa = [obj]
+        push!(caixas, caixa)
+    else
+        push!(caixa, obj)
     end
 end
 
+# Ordena as caixas por quantidade de itens em ordem decrescente
+sort!(caixas, by = c -> length(c), rev = true)
 
+println("TP2 2021031688 = ", length(caixas))
 
-if length(ARGS) > 0
-    resolver_empacotamento(ARGS[1])
-else
-    println("Por favor, forneça o nome do arquivo como argumento.")
+# Imprime os IDs dos objetos em cada linha
+for (i, caixa) in enumerate(caixas)
+    for obj in caixa
+        print("\t$(obj[1])")
+    end
+    println()
 end
