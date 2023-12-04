@@ -1,9 +1,3 @@
-# Função para abrir o arquivo
-function abrir_arquivo(nome_arquivo)
-    open(nome_arquivo, "r")
-end
-
-# Função para ler os dados do arquivo
 function ler_dados_subgrafo(nome_arquivo)
     arquivo = abrir_arquivo(nome_arquivo)
     num_vertices = parse(Int, split(readline(arquivo), '\t')[2])
@@ -22,7 +16,10 @@ function ler_dados_subgrafo(nome_arquivo)
     num_vertices, matriz_arestas, matriz_pesos, arestas_pesos
 end
 
-# Função para atualizar as heurísticas
+function abrir_arquivo(nome_arquivo)
+    open(nome_arquivo, "r")
+end
+
 function atualizar_heuristicas(heuristica_vertices, matriz_arestas, matriz_pesos, solucao, min_indx)
     for i in eachindex(heuristica_vertices)
         if matriz_arestas[min_indx, i] == 1 && solucao[i] == 1
@@ -60,11 +57,10 @@ end
 function calcular_total(arestas_pesos, solucao)
     total = sum(w for (u, v, w) in arestas_pesos if solucao[u] == 1 && solucao[v] == 1)
 
-    println("TP_2 2021031548 = ", total)
-    println("VÉRTICES:")
+    println("TP2 2021031548 = ", total)
     for (i, val) in enumerate(solucao)
         if val == 1
-            println(i)
+            print(i,"\t")
         end
     end
 end
