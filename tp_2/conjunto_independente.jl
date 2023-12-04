@@ -23,7 +23,7 @@ function ordenar_vertices_por_grau(arestas)
     return sort(collect(keys(arestas)), by = v -> length(arestas[v]))
 end
 
-# verificar se um vértice é adjacente a algum vértice em um conjunto
+# Verificar se um vértice é adjacente a algum vértice em um conjunto
 function é_adjacente(v, conjunto, arestas)
     for adj in arestas[v]
         if adj in conjunto
@@ -44,7 +44,7 @@ function heuristica_conjunto_independente(vertices, arestas)
     return conjunto_independente
 end
 
-#usar as tentativas para aproximar do melhor conjunto independente
+# Usar as tentativas para se aproximar do melhor conjunto independente
 function resolver_conjunto_independente(nome_arquivo, tentativas=10)
     n, arestas = ler_dados(nome_arquivo)
     melhores_vertices = Set{Int}()
@@ -61,8 +61,8 @@ function resolver_conjunto_independente(nome_arquivo, tentativas=10)
         end
     end
 
-    println("TP2 MATRICULA: ", melhor_tamanho)
-    println(join(melhores_vertices, " "))
+    println("TP2 MATRICULA : ", melhor_tamanho)
+    println(join(sort(collect(melhores_vertices)), "\t"))
 end
 
 if length(ARGS) > 0
