@@ -1,6 +1,5 @@
 using Random
 
-# Função para ler os dados do arquivo de entrada
 function ler_dados(nome_arquivo)
     arquivo = open(nome_arquivo, "r")
     n = parse(Int, split(readline(arquivo), '\t')[2])
@@ -18,12 +17,10 @@ function ler_dados(nome_arquivo)
     return n, arestas
 end
 
-# Função para ordenar os vértices pelo grau
 function ordenar_vertices_por_grau(arestas)
     return sort(collect(keys(arestas)), by = v -> length(arestas[v]))
 end
 
-# Verificar se um vértice é adjacente a algum vértice em um conjunto
 function é_adjacente(v, conjunto, arestas)
     for adj in arestas[v]
         if adj in conjunto
@@ -33,21 +30,19 @@ function é_adjacente(v, conjunto, arestas)
     return false
 end
 
-# Heurística de conjunto independente
 function heuristica_conjunto_independente(vertices, arestas)
     conjunto_independente = Set{Int}()
     for v in vertices
-        if !é_adjacente(v, conjunto_independente, arestas)
+        if !any(adj -> adj in conjunto_independente, arestas[v])
             push!(conjunto_independente, v)
         end
     end
     return conjunto_independente
 end
 
-# Usar as tentativas para se aproximar do melhor conjunto independente
 function resolver_conjunto_independente(nome_arquivo, tentativas=10)
     n, arestas = ler_dados(nome_arquivo)
-    melhores_vertices = Set{Int}()
+    melhores_vertices = BitSet()
     melhor_tamanho = 0
 
     for i in 1:tentativas
