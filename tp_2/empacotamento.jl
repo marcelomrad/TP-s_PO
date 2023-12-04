@@ -1,7 +1,4 @@
 function lerDados()
-    if length(ARGS) < 2
-        error("Número de argumentos inválido")
-    end
     
     filePath = ARGS[1]
     file = open(filePath, "r")
@@ -62,7 +59,7 @@ println("TP2 2021031688 = ", length(caixas))
 # Imprime os IDs dos objetos em cada linha
 for (i, caixa) in enumerate(caixas)
     for obj in caixa
-        print("\t$(obj[1])")
+        print("$(obj[1])\t")
     end
     println()
 end
