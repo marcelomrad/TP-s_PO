@@ -90,10 +90,10 @@ end
 
 production, solution = calculateCost(data.c, data.d, data.s, data.p, data.n)
 
-println("TP1 2021031629 = ", solution)
-for i in 1:data.n
-    println(production[i], "\t")
-end
+println("TP2 2021031629 = ", solution)
+
+println(join(production, "\t"))
+
 
 
 
